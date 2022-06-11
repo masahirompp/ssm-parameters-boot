@@ -11,7 +11,7 @@
 
 ## DEMO
 
-![DEMO](https://raw.githubusercontent.com/masahirompp/images/main/ssm-parameters-boot.gif)
+![CLI](https://raw.githubusercontent.com/masahirompp/images/main/ssm-parameters-boot.gif)
 
 ## Requirements
 
@@ -41,6 +41,7 @@ bootstrap(
     FIREBASE_CONFIG: pt.Json<{ apiKey: string }>({ required: true }),
   })),
   {
+    ssmBasePath: '/TEST',
     onEnded: result => console.log(result),
   }
 );
@@ -51,6 +52,10 @@ bootstrap(
 ```sh
 node --loader ts-node/esm cli.ts
 ```
+
+### Output
+
+![OUTPUT](https://raw.githubusercontent.com/masahirompp/images/main/ssm-parameters-boot_ssm.png)
 
 [build-img]: https://github.com/masahirompp/ssm-parameters-boot/actions/workflows/release.yml/badge.svg
 [build-url]: https://github.com/masahirompp/ssm-parameters-boot/actions/workflows/release.yml
