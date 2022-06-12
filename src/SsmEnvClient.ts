@@ -17,6 +17,8 @@ export type SsmEnvClientOption = {
   tagKeyPrefix?: string;
   ssmClientConfig?: SSMClientConfig;
   ssmBasePath?: string;
+  kmsKeyId?: string;
+  secureParameterNames?: string[];
 };
 
 export class SsmEnvClient {
@@ -24,6 +26,8 @@ export class SsmEnvClient {
   private readonly ssmClient;
   private readonly envListPath;
   private readonly tagKeyPrefix;
+  private readonly kmsKeyId;
+  private readonly secureParameterNames;
   constructor(
     private serviceName: string,
     private option?: SsmEnvClientOption
@@ -36,6 +40,8 @@ export class SsmEnvClient {
     this.ssmClient = new SSMClient({});
     this.envListPath = path.join(this.basePath, `${this.serviceName}_ENV_LIST`);
     this.tagKeyPrefix = this.option?.tagKeyPrefix || '';
+    this.kmsKeyId = this.option?.kmsKeyId;
+    this.secureParameterNames = this.option?.secureParameterNames || [];
   }
 
   async loadEnvList() {
@@ -50,6 +56,7 @@ export class SsmEnvClient {
     return this.putParameter(
       path.join(this.envListPath, envName),
       new Date().toISOString(),
+      false,
       { Overwrite: false, Tags: this.makeTags(envName) }
     );
   }
@@ -94,6 +101,7 @@ export class SsmEnvClient {
         this.putParameter(
           this.makeParameterPath(envName, key),
           newParameters[key],
+          this.secureParameterNames.includes(key),
           { Overwrite: true, Tags }
         )
       ),
@@ -123,6 +131,7 @@ export class SsmEnvClient {
   private putParameter(
     path: string,
     value: string,
+    secure = false,
     option: Omit<PutParameterCommandInput, 'Type' | 'Name' | 'Value'> = {}
   ) {
     const overwriteTags =
@@ -134,9 +143,10 @@ export class SsmEnvClient {
     return this.ssmClient
       .send(
         new PutParameterCommand({
-          Type: ParameterType.STRING,
+          Type: secure ? ParameterType.SECURE_STRING : ParameterType.STRING,
           Name: path,
           Value: value,
+          KeyId: secure ? this.kmsKeyId : undefined,
           ...option,
         })
       )
@@ -166,7 +176,11 @@ export class SsmEnvClient {
       nextToken?: string
     ) => Promise<Array<Parameter>> = async (path, nextToken) => {
       const { Parameters, NextToken } = await this.ssmClient.send(
-        new GetParametersByPathCommand({ Path: path, NextToken: nextToken })
+        new GetParametersByPathCommand({
+          Path: path,
+          NextToken: nextToken,
+          WithDecryption: this.secureParameterNames.length > 0,
+        })
       );
       if (!Parameters) {
         return [];

@@ -13,6 +13,7 @@ await bootstrap(
   {
     ssmBasePath: '/TEST',
     tagKeyPrefix: 'TEST_',
+    secureParameterNames: ['TOKEN'],
     onEnded: result => console.log(result),
   }
 );

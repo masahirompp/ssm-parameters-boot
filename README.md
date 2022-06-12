@@ -42,6 +42,7 @@ bootstrap(
   })),
   {
     ssmBasePath: '/TEST',
+    secureParameterNames: ['TOKEN'],
     onEnded: result => console.log(result),
   }
 );

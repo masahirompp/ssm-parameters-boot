@@ -54,7 +54,7 @@ export class Prompt<T extends Record<string, ParameterConstruct<any>>> {
     }>({
       type: 'list',
       name: 'selectedEnvName',
-      message: 'Select an environment to deploy',
+      message: 'Select an environment',
       choices: [...envList, NEW_ENVIRONMENT],
     });
     if (selectedEnvName === NEW_ENVIRONMENT) {
