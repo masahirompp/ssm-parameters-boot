@@ -35,7 +35,7 @@ import { bootstrap } from 'ssm-parameters-boot';
 import { createTypedParameters } from 'construct-typed-parameters';
 
 bootstrap(
-  'YourServiceName',
+  'TestApp', // Your Service Name (Application Name)
   createTypedParameters(pt => ({
     TOKEN: pt.String({ required: true }),
     FIREBASE_CONFIG: pt.Json<{ apiKey: string }>({ required: true }),
