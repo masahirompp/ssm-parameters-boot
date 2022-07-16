@@ -1,17 +1,17 @@
 import {
   ParameterConstruct,
+  ParameterError,
   ParsedParameters,
   StringifiedParameters,
-  TypedParametersConstruct,
-  ParameterError,
+  TypedParameters,
 } from 'construct-typed-parameters';
-import { SsmEnvClient } from './SsmEnvClient.js';
 import inquirer from 'inquirer';
+import { SsmEnvClient } from './SsmEnvClient.js';
 
 export class Prompt<T extends Record<string, ParameterConstruct<any>>> {
   private defaultParameters: ParsedParameters<T>;
   constructor(
-    private parametersConstruct: TypedParametersConstruct<T>,
+    private parametersConstruct: TypedParameters<T>,
     private client: SsmEnvClient
   ) {
     this.defaultParameters = parametersConstruct.parse({}, false);

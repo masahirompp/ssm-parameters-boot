@@ -2,7 +2,7 @@ import {
   ParameterConstruct,
   ParsedParameters,
   StringifiedParameters,
-  TypedParametersConstruct,
+  TypedParameters,
 } from 'construct-typed-parameters';
 import { Prompt } from './Prompt.js';
 import { SsmEnvClient, SsmEnvClientOption } from './SsmEnvClient.js';
@@ -11,7 +11,7 @@ export const bootstrap = async <
   T extends Record<string, ParameterConstruct<any>>
 >(
   serviceName: string,
-  parametersConstruct: TypedParametersConstruct<T>,
+  parametersConstruct: TypedParameters<T>,
   options: SsmEnvClientOption & {
     onEnded?: (args: {
       envName: string;

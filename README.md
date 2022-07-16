@@ -31,21 +31,23 @@ npm i ssm-parameters-boot construct-typed-parameters
 
 ```ts
 // cli.ts
-import { bootstrap } from 'ssm-parameters-boot';
-import { createTypedParameters } from 'construct-typed-parameters';
+import { bootstrap } from '../src/index.js';
+import { TypedParameters } from 'construct-typed-parameters';
 
-bootstrap(
-  'TestApp', // Your Service Name (Application Name)
-  createTypedParameters(pt => ({
-    TOKEN: pt.String({ required: true }),
-    FIREBASE_CONFIG: pt.Json<{ apiKey: string }>({ required: true }),
-  })),
-  {
-    ssmBasePath: '/TEST',
-    secureParameterNames: ['TOKEN'],
-    onEnded: result => console.log(result),
-  }
-);
+const parameters = new TypedParameters(pt => ({
+  TOKEN: pt.String({ required: true, defaultValue: 'token' }),
+  FIREBASE_CONFIG: pt.Json<{ apiKey: string }>({
+    required: true,
+    defaultValue: { apiKey: 'apiKey' },
+  }),
+}));
+
+await bootstrap('TestApp', parameters, {
+  ssmBasePath: '/TEST',
+  tagKeyPrefix: 'TEST_',
+  secureParameterNames: ['TOKEN'],
+  onEnded: result => console.log(result),
+});
 ```
 
 ## Usage
