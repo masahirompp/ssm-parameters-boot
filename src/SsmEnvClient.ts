@@ -37,7 +37,7 @@ export class SsmEnvClient {
       throw new Error("option.ssmBasePath must start with '/'");
     }
 
-    this.ssmClient = new SSMClient({});
+    this.ssmClient = new SSMClient(option?.ssmClientConfig || {});
     this.envListPath = path.join(this.basePath, `${this.serviceName}_ENV_LIST`);
     this.tagKeyPrefix = this.option?.tagKeyPrefix || '';
     this.kmsKeyId = this.option?.kmsKeyId;
