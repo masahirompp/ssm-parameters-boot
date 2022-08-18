@@ -41,16 +41,16 @@
   },
   "homepage": "https://github.com/masahirompp/ssm-parameters-boot#readme",
   "devDependencies": {
-    "@aws-sdk/client-ssm": "^3.131.0",
-    "@types/inquirer": "^8.2.1",
-    "@types/node": "^18.0.5",
-    "@typescript-eslint/eslint-plugin": "^5.30.6",
-    "@typescript-eslint/parser": "^5.30.6",
-    "commitizen": "^4.2.4",
+    "@aws-sdk/client-ssm": "^3.150.0",
+    "@types/inquirer": "^9.0.1",
+    "@types/node": "^18.7.6",
+    "@typescript-eslint/eslint-plugin": "^5.33.1",
+    "@typescript-eslint/parser": "^5.33.1",
+    "commitizen": "^4.2.5",
     "construct-typed-parameters": "^3.0.2",
     "cz-conventional-changelog": "^3.3.0",
     "dotenv": "^16.0.1",
-    "eslint": "^8.19.0",
+    "eslint": "^8.22.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.2.1",
@@ -75,8 +75,8 @@
     ]
   },
   "dependencies": {
-    "@aws-sdk/client-ssm": "^3.131.0",
+    "@aws-sdk/client-ssm": "^3.150.0",
     "construct-typed-parameters": "^3.0.2",
-    "inquirer": "^9.0.1"
+    "inquirer": "^9.1.0"
   }
 }
