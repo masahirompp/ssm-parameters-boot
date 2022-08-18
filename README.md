@@ -31,7 +31,8 @@ npm i ssm-parameters-boot construct-typed-parameters
 
 ```ts
 // cli.ts
-import { bootstrap } from '../src/index.js';
+import { bootstrap } from '../src/index.js'; // for ESM
+// import { bootstrap } from '../src/index'; // for CommonJS
 import { TypedParameters } from 'construct-typed-parameters';
 
 const parameters = new TypedParameters(pt => ({
@@ -53,7 +54,8 @@ await bootstrap('TestApp', parameters, {
 ## Usage
 
 ```sh
-node --loader ts-node/esm cli.ts
+node --loader ts-node/esm cli.ts # for ESM
+# node -r ts-node/register cli.ts # for CommonJS
 ```
 
 ### Output
