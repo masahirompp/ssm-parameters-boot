@@ -1,14 +1,15 @@
-import {
+import type {
   ParameterConstruct,
   ParsedParameters,
   StringifiedParameters,
   TypedParameters,
 } from 'construct-typed-parameters';
-import { Prompt } from './Prompt.js';
-import { SsmEnvClient, SsmEnvClientOption } from './SsmEnvClient.js';
+import {EditParametersPrompt} from './edit-parameters-prompt.js';
+import type {SsmEnvClientOption} from './ssm-env-client.js';
+import {SsmEnvClient} from './ssm-env-client.js';
 
 export const bootstrap = async <
-  T extends Record<string, ParameterConstruct<any>>
+  T extends Record<string, ParameterConstruct<any>>,
 >(
   serviceName: string,
   parametersConstruct: TypedParameters<T>,
@@ -18,16 +19,17 @@ export const bootstrap = async <
       stringifiedParameters: StringifiedParameters<T>;
       parsedParameters: ParsedParameters<T>;
     }) => Promise<void> | void;
-  } = {}
+  } = {},
 ) => {
   if (!serviceName) {
-    throw Error('serviceName is required.');
+    throw new Error('serviceName is required.');
   }
-  const { onEnded, ...ssmEnvClientOption } = options;
 
-  const result = await new Prompt(
+  const {onEnded, ...ssmEnvClientOption} = options;
+
+  const result = await new EditParametersPrompt(
     parametersConstruct,
-    new SsmEnvClient(serviceName, ssmEnvClientOption)
+    new SsmEnvClient(serviceName, ssmEnvClientOption),
   ).interact();
 
   if (onEnded) {

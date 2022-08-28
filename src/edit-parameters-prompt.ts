@@ -1,18 +1,20 @@
-import {
+/* eslint-disable @typescript-eslint/naming-convention */
+import type {
   ParameterConstruct,
-  ParameterError,
   ParsedParameters,
   StringifiedParameters,
-  TypedParameters,
+  TypedParameters} from 'construct-typed-parameters';
+import {
+  ParameterError,
 } from 'construct-typed-parameters';
 import inquirer from 'inquirer';
-import { SsmEnvClient } from './SsmEnvClient.js';
+import type {SsmEnvClient} from './ssm-env-client.js';
 
-export class Prompt<T extends Record<string, ParameterConstruct<any>>> {
-  private defaultParameters: ParsedParameters<T>;
+export class EditParametersPrompt<T extends Record<string, ParameterConstruct<any>>> {
+  private readonly defaultParameters: ParsedParameters<T>;
   constructor(
-    private parametersConstruct: TypedParameters<T>,
-    private client: SsmEnvClient
+    private readonly parametersConstruct: TypedParameters<T>,
+    private readonly client: SsmEnvClient,
   ) {
     this.defaultParameters = parametersConstruct.parse({}, false);
   }
@@ -32,24 +34,24 @@ export class Prompt<T extends Record<string, ParameterConstruct<any>>> {
     const parsedParameters = await (isNewEnv
       ? this.editParameters({})
       : this.askAndEditParameters(
-          this.parametersConstruct.parse(
-            (await this.client.loadParameters(
-              envName
-            )) as StringifiedParameters<T>,
-            false
-          )
-        ));
-    const stringifiedParameters =
-      this.parametersConstruct.stringify(parsedParameters);
+        this.parametersConstruct.parse(
+          (await this.client.loadParameters(
+            envName,
+          )) as StringifiedParameters<T>,
+          false,
+        ),
+      ));
+    const stringifiedParameters
+      = this.parametersConstruct.stringify(parsedParameters);
 
     await this.client.syncParameters(envName, stringifiedParameters);
 
-    return { stringifiedParameters, parsedParameters, envName };
+    return {stringifiedParameters, parsedParameters, envName};
   }
 
   private async selectOrInputEnv(envList: string[]) {
     const NEW_ENVIRONMENT = '- create a new environment -';
-    const { selectedEnvName } = await inquirer.prompt<{
+    const {selectedEnvName} = await inquirer.prompt<{
       selectedEnvName: string;
     }>({
       type: 'list',
@@ -58,14 +60,15 @@ export class Prompt<T extends Record<string, ParameterConstruct<any>>> {
       choices: [...envList, NEW_ENVIRONMENT],
     });
     if (selectedEnvName === NEW_ENVIRONMENT) {
-      const { newEnvName } = await inquirer.prompt<{ newEnvName: string }>({
+      const {newEnvName} = await inquirer.prompt<{newEnvName: string}>({
         type: 'input',
         name: 'newEnvName',
         message: 'Please enter an environment name.',
-        validate: input => !!input, // required check.
+        validate: Boolean, // Required check.
       });
       return newEnvName;
     }
+
     return selectedEnvName;
   }
 
@@ -73,19 +76,21 @@ export class Prompt<T extends Record<string, ParameterConstruct<any>>> {
     try {
       this.parametersConstruct.stringify(
         parsedParameters as ParsedParameters<T>,
-        true
+        true,
       );
-    } catch (e) {
-      if (e instanceof ParameterError) {
-        return e.message;
+    } catch (error: unknown) {
+      if (error instanceof ParameterError) {
+        return error.message;
       }
-      throw e;
+
+      throw error;
     }
-    return true; // valid
+
+    return true; // Valid
   }
 
   private async editParameters(currentParsedParameters: Record<string, any>) {
-    const { newInput } = await inquirer.prompt<{ newInput: string }>({
+    const {newInput} = await inquirer.prompt<{newInput: string}>({
       type: 'editor',
       name: 'newInput',
       message: 'Edit parameters',
@@ -96,11 +101,12 @@ export class Prompt<T extends Record<string, ParameterConstruct<any>>> {
       validate: input => {
         try {
           return this.validateParameters(JSON.parse(input as string));
-        } catch (e) {
-          if (e instanceof SyntaxError) {
-            return e.message; // JSON.parse Error
+        } catch (error: unknown) {
+          if (error instanceof SyntaxError) {
+            return error.message; // JSON.parse Error
           }
-          throw e;
+
+          throw error;
         }
       },
     });
@@ -110,7 +116,7 @@ export class Prompt<T extends Record<string, ParameterConstruct<any>>> {
   }
 
   private async askAndEditParameters(
-    currentParsedParameters: Record<string, any>
+    currentParsedParameters: Record<string, any>,
   ): Promise<ParsedParameters<T>> {
     if (this.validateParameters(currentParsedParameters) !== true) {
       console.log('Parameters Construct has been changed');
@@ -123,7 +129,7 @@ export class Prompt<T extends Record<string, ParameterConstruct<any>>> {
       const SHOW = 'show current parameters';
       const CHANGE = 'change parameters';
       const CONTINUE = 'without change, continue';
-      const { action } = await inquirer.prompt<{ action: string }>({
+      const {action} = await inquirer.prompt<{action: string}>({
         type: 'list',
         name: 'action',
         message: 'Do you want to change the parameters?',
@@ -132,12 +138,16 @@ export class Prompt<T extends Record<string, ParameterConstruct<any>>> {
       if (action === SHOW) {
         console.log(this.format(beforeParameters));
         return _askAndEditParameters(beforeParameters);
-      } else if (action === CHANGE) {
+      }
+
+      if (action === CHANGE) {
         const newParameters = await this.editParameters(beforeParameters);
         return _askAndEditParameters(newParameters);
       }
+
       return beforeParameters;
     };
+
     return _askAndEditParameters({
       ...this.defaultParameters,
       ...currentParsedParameters,
