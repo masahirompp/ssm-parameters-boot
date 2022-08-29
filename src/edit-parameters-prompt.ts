@@ -32,7 +32,7 @@ export class EditParametersPrompt<T extends Record<string, ParameterConstruct<an
     }
 
     const parsedParameters = await (isNewEnv
-      ? this.editParameters({})
+      ? this.editParameters(this.defaultParameters)
       : this.askAndEditParameters(
         this.parametersConstruct.parse(
           (await this.client.loadParameters(
@@ -56,14 +56,14 @@ export class EditParametersPrompt<T extends Record<string, ParameterConstruct<an
     }>({
       type: 'list',
       name: 'selectedEnvName',
-      message: 'Select an environment',
+      message: 'Select an environment:',
       choices: [...envList, NEW_ENVIRONMENT],
     });
     if (selectedEnvName === NEW_ENVIRONMENT) {
       const {newEnvName} = await inquirer.prompt<{newEnvName: string}>({
         type: 'input',
         name: 'newEnvName',
-        message: 'Please enter an environment name.',
+        message: 'Please enter an environment name:',
         validate: Boolean, // Required check.
       });
       return newEnvName;
