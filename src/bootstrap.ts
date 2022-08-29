@@ -3,12 +3,16 @@ import {EditParametersPrompt} from './edit-parameters-prompt.js';
 import type {SsmEnvClientOption} from './ssm-env-client.js';
 import {SsmEnvClient} from './ssm-env-client.js';
 
+type BootstrapOptions<T extends Record<string, ParameterConstruct<any>>> = Omit<SsmEnvClientOption, 'secureParameterNames'> & {
+  secureParameterNames?: Array<keyof T & string>;
+};
+
 export const bootstrap = async <
   T extends Record<string, ParameterConstruct<any>>,
 >(
   serviceName: string,
   parametersConstruct: TypedParameters<T>,
-  options: SsmEnvClientOption,
+  options: BootstrapOptions<T>,
 ) => {
   if (!serviceName) {
     throw new Error('serviceName is required.');
