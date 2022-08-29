@@ -32,7 +32,6 @@ npm i ssm-parameters-boot construct-typed-parameters
 ```ts
 // cli.ts
 import { bootstrap } from "../src/index.js"; // for ESM
-// import { bootstrap } from '../src/index'; // for CommonJS
 import { TypedParameters } from "construct-typed-parameters";
 
 const parameters = new TypedParameters((pt) => ({
@@ -43,19 +42,18 @@ const parameters = new TypedParameters((pt) => ({
   }),
 }));
 
-await bootstrap("TestApp", parameters, {
+const result = await bootstrap("TestApp", parameters, {
   ssmBasePath: "/TEST",
   tagKeyPrefix: "TEST_",
   secureParameterNames: ["TOKEN"],
-  onEnded: (result) => console.log(result),
 });
+console.log(result);
 ```
 
 ## Usage
 
 ```sh
-node --loader ts-node/esm cli.ts # for ESM
-# node -r ts-node/register cli.ts # for CommonJS
+node --loader ts-node/esm cli.ts
 ```
 
 ### Output
