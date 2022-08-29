@@ -78,20 +78,24 @@ export class SsmEnvClient {
     );
   }
 
-  async syncParameters(envName: string, newParameters: Record<string, string>) {
+  async syncParameters(envName: string, newParameters: Partial<Record<string, string>>) {
     const currentParameters = await this.loadParameters(envName);
     const putKeys: string[] = [];
     const removeKeys: string[] = [];
     for (const key of Object.keys(newParameters)) {
-      if (!Object.hasOwn(currentParameters, key)) {
+      if (!Object.hasOwn(currentParameters, key) && newParameters[key]?.length) {
         putKeys.push(key); // New key
       }
     }
 
     for (const key of Object.keys(currentParameters)) {
-      if (key in newParameters) {
+      if (Object.hasOwn(newParameters, key)) {
         if (currentParameters[key] !== newParameters[key]) {
-          putKeys.push(key); // Modified key
+          if (newParameters[key]?.length) {
+            putKeys.push(key); // Modified key
+          } else {
+            removeKeys.push(key); // Remove key
+          }
         }
       } else {
         removeKeys.push(key); // Remove key
@@ -103,7 +107,7 @@ export class SsmEnvClient {
       ...putKeys.map(async key =>
         this.putParameter(
           this.makeParameterPath(envName, key),
-          newParameters[key],
+          newParameters[key]!,
           this.secureParameterNames.includes(key),
           {Overwrite: true, Tags},
         ),

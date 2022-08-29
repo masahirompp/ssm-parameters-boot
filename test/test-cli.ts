@@ -8,6 +8,7 @@ const parameters = new TypedParameters(pt => ({
     required: true,
     defaultValue: {apiKey: 'apiKey'},
   }),
+  OPTIONAL: pt.number({required: false}),
 }));
 
 await bootstrap('TestApp', parameters, {
