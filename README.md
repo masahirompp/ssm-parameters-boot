@@ -24,14 +24,15 @@ ts-node >= 10.8
 ## Install
 
 ```bash
-npm i ssm-parameters-boot construct-typed-parameters
+npm i ssm-parameters-boot ssm-env-client construct-typed-parameters
 ```
 
 ## Setup
 
 ```ts
 // cli.ts
-import { bootstrap } from "../src/index.js"; // for ESM
+import { bootstrap } from "../src/index.js";
+import { SsmEnvClient } from "ssm-env-client";
 import { TypedParameters } from "construct-typed-parameters";
 
 const parameters = new TypedParameters((pt) => ({
@@ -41,12 +42,9 @@ const parameters = new TypedParameters((pt) => ({
     defaultValue: { apiKey: "apiKey" },
   }),
 }));
+const ssmClient = new SsmEnvClient("YourServiceName");
 
-const result = await bootstrap("TestApp", parameters, {
-  ssmBasePath: "/TEST",
-  tagKeyPrefix: "TEST_",
-  secureParameterNames: ["TOKEN"],
-});
+const result = await bootstrap(parameters, ssmClient);
 console.log(result);
 ```
 

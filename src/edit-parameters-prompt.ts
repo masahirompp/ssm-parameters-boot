@@ -8,7 +8,7 @@ import {
   ParameterError,
 } from 'construct-typed-parameters';
 import inquirer from 'inquirer';
-import type {SsmEnvClient} from './ssm-env-client.js';
+import type {SsmEnvClient} from 'ssm-env-client';
 
 export class EditParametersPrompt<T extends Record<string, ParameterConstruct<any>>> {
   private readonly defaultParameters: ParsedParameters<T>;
@@ -44,7 +44,7 @@ export class EditParametersPrompt<T extends Record<string, ParameterConstruct<an
     const stringifiedParameters
       = this.parametersConstruct.stringify(parsedParameters);
 
-    await this.client.syncParameters(envName, stringifiedParameters);
+    await this.client.putParameters(envName, stringifiedParameters);
 
     return {stringifiedParameters, parsedParameters, envName};
   }

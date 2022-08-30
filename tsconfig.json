@@ -1,28 +1,11 @@
 {
-  "compileOnSave": false,
+  "extends": "@tsconfig/node16-strictest-esm/tsconfig.json",
   "compilerOptions": {
-    "allowJs": true,
-    "allowSyntheticDefaultImports": true,
-    "baseUrl": "src",
-    "declaration": true,
-    "esModuleInterop": true,
-    "inlineSourceMap": false,
-    "lib": ["esnext"],
-    "listEmittedFiles": false,
-    "listFiles": false,
-    "module": "NodeNext",
-    "noFallthroughCasesInSwitch": true,
+    "lib": ["ES2022"],
+    "exactOptionalPropertyTypes": false,
     "outDir": "lib",
-    "pretty": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "target": "esnext",
-    "traceResolution": false,
-    "types": ["node"]
+    "declaration": true
+
   },
-  "exclude": ["node_modules", "dist"],
-  "include": ["src", "test", "index.cjs"],
-  "ts-node": {
-    "esm": true
-  }
+  "exclude": ["lib"]
 }
