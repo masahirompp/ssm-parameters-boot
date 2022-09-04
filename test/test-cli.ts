@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import {TypedParameters} from 'construct-typed-parameters';
-import {SsmEnvClient} from 'ssm-env-client';
 import {bootstrap} from '../src/index.js';
 
 const parameters = new TypedParameters(pt => ({
@@ -11,7 +10,6 @@ const parameters = new TypedParameters(pt => ({
   }),
   OPTIONAL: pt.number({required: false}),
 }));
-const ssmClient = new SsmEnvClient('TestApp');
 
-const result = await bootstrap(parameters, ssmClient);
+const result = await bootstrap('TestApp', parameters);
 console.log(result);
