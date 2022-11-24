@@ -55,6 +55,7 @@ export class EditParametersPrompt<T extends Record<string, ParameterConstruct<an
       selectedEnvName: string;
     }>({
       type: 'list',
+      loop: false,
       name: 'selectedEnvName',
       message: 'Select an environment:',
       choices: [...envList, NEW_ENVIRONMENT],
@@ -131,6 +132,7 @@ export class EditParametersPrompt<T extends Record<string, ParameterConstruct<an
       const CONTINUE = 'without change, continue';
       const {action} = await inquirer.prompt<{action: string}>({
         type: 'list',
+        loop: false,
         name: 'action',
         message: 'Do you want to change the parameters?',
         choices: [SHOW, CHANGE, CONTINUE],
