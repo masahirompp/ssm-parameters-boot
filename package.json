@@ -1,6 +1,6 @@
 {
   "name": "ssm-parameters-boot",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "Edit parameters in CLI and store to aws ssm parameter store",
   "type": "module",
   "main": "./lib/src/index.js",
@@ -44,16 +44,16 @@
   "devDependencies": {
     "@tsconfig/node16-strictest-esm": "^1.0.3",
     "@types/inquirer": "^9.0.3",
-    "@types/node": "^18.11.9",
-    "commitizen": "^4.2.5",
-    "construct-typed-parameters": "^4.0.1",
+    "@types/node": "^18.11.18",
+    "commitizen": "^4.2.6",
+    "construct-typed-parameters": "^4.0.2",
     "cz-conventional-changelog": "^3.3.0",
     "dotenv": "^16.0.3",
-    "husky": "^8.0.2",
-    "lint-staged": "^13.0.3",
-    "semantic-release": "^19.0.5",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.1.0",
+    "semantic-release": "^20.0.2",
     "ts-node": "^10.9.1",
-    "typescript": "^4.9.3",
+    "typescript": "^4.9.4",
     "xo": "^0.53.1"
   },
   "config": {
@@ -71,9 +71,9 @@
   },
   "dependencies": {
     "inquirer": "^9.1.4",
-    "ssm-env-client": "^1.0.0"
+    "ssm-env-client": "^1.0.2"
   },
   "peerDependencies": {
-    "construct-typed-parameters": "^4.0.1"
+    "construct-typed-parameters": "^4.0.2"
   }
 }
