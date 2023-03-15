@@ -19,13 +19,13 @@ export class EditParametersPrompt<T extends Record<string, ParameterConstruct<an
     this.defaultParameters = parametersConstruct.parse({}, false);
   }
 
-  async interact(): Promise<{
+  async interact(fixedEnvName?: string): Promise<{
     envName: string;
     stringifiedParameters: StringifiedParameters<T>;
     parsedParameters: ParsedParameters<T>;
   }> {
     const envList = await this.client.loadEnvList();
-    const envName = await this.selectOrInputEnv(envList);
+    const envName = fixedEnvName ?? await this.selectOrInputEnv(envList);
     const isNewEnv = !envList.includes(envName);
     if (isNewEnv) {
       await this.client.putEnv(envName);

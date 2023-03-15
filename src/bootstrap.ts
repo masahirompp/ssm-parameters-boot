@@ -8,8 +8,8 @@ export const bootstrap = async <
 >(
   serviceName: string,
   parametersConstruct: TypedParameters<T>,
-  option?: SsmEnvClientOption,
+  option?: SsmEnvClientOption & {envName?: string},
 ) => new EditParametersPrompt(
   parametersConstruct,
   new SsmEnvClient(serviceName, option),
-).interact();
+).interact(option?.envName);
